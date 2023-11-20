@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  - push
+
+jobs:
+  package-checker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16.13"
+      - name: Install package
+        run: npm install
+      - name: Run package check
+        run: |
+          npx better-npm-audit audit --level critical
+          audit_result=$?
+          if [ $audit_result -ne 0 ]; then
+            echo "[Failed] Audit found critical issues."
+            exit 1
+          else
+            echo "[Pass] Not found critical issues."
+          fi
