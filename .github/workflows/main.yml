@@ -12,7 +12,7 @@ jobs:
       - name: Setup Nodejs
         uses: actions/setup-node@v4
         with:
-          node-version: "16.13"
+          node-version: "20.9"
       - name: Install package
         run: npm install
       - name: Run package check

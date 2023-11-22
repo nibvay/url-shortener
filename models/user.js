@@ -1,27 +1,26 @@
 import mongoose from "mongoose";
 
-const UrlSchema = new mongoose.Schema({
-  originUrl: {
+const UserSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+  },
+  name: {
     type: String,
     required: true,
   },
-  urlId: {
+  password: {
     type: String,
     required: true,
   },
-  shortUrl: {
+  email: {
     type: String,
     required: true,
   },
-  clickCount: {
-    type: Number,
-    default: 0,
-  },
-  date: {
+  creationDate: {
     type: String,
     required: true,
     default: Date.now,
   }
 });
 
-export default mongoose.model("Urls", UrlSchema);
+export default mongoose.model("Users", UserSchema);

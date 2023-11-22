@@ -1,6 +1,7 @@
 import express from "express";
 import { nanoid } from "nanoid";
 import Url from "../models/url.js";
+import CustomError from "../utils/CustomError.js";
 
 const router = express.Router();
 
@@ -15,34 +16,33 @@ function validUrl(url) {
 // payload: { originUrl }
 router.post("/shorten", async (req, res, next) => {
   const { originUrl } = req.body;
-
-  if (!validUrl(originUrl)) {
-    res.status(400).json({ error: "invalid origin url" });
-    return next(new Error("invalid url"));
-  }
-
-  const url = await Url.findOne({ originUrl });
-  console.log("find", url);
-  if (url) {
-    res.status(200).json({ urlId: url.shortUrl });
-  } else {
-    const urlId = nanoid();
-    const newUrl = await Url.create({
-      originUrl,
-      urlId,
-      shortUrl: `${BASE_URL}${urlId}`,
-      date: Date.now(),
-    });
-    console.log("newUrl", newUrl);
-    res.status(200).json({ url: newUrl });
+  try {
+    if (!validUrl(originUrl)) throw new CustomError({ message: "invalid origin url", status: 400});
+    const url = await Url.findOne({ originUrl });
+    if (url) {
+      res.status(200).json({ urlId: url.shortUrl });
+    } else {
+      const urlId = nanoid();
+      const newUrl = await Url.create({
+        originUrl,
+        urlId,
+        shortUrl: `${BASE_URL}${urlId}`,
+        date: Date.now(),
+      });
+      console.log("newUrl", newUrl);
+      res.status(200).json({ url: newUrl });
+    }
+  } catch (e) {
+    next(e);
   }
 });
 
 // GET /url/xxxxx
 router.get("/:urlId", async (req, res, next) => {
   const { urlId } = req.params;
-  const url = await Url.findOne({ urlId });
-  if (url) {
+  try {
+    const url = await Url.findOne({ urlId });
+    if (!url) throw new CustomError({ message: "url not found", status: 400 });
     const updatedUrl = await Url.findOneAndUpdate({ urlId },
       { clickCount: url.clickCount + 1 },
       { 
@@ -51,8 +51,8 @@ router.get("/:urlId", async (req, res, next) => {
       }
     );
     res.status(200).json({ result: updatedUrl });
-  } else {
-    res.status(404).json({ result: "not fount" });
+  } catch(e) {
+    next(e);
   }
 });
 
