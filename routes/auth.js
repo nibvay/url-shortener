@@ -19,7 +19,8 @@ router.post("/register", async (req, res, next) => {
       email,
       creationDate: Date.now(),
     };
-  
+    const existedUser = await User.find({ email });
+    if (existedUser.length > 0) throw new CustomError({ message: "This email has already been registered.", status: 400 });
     const newUser = await User.create(toAddUser);
     res.status(200).json({ message: "User registered successfully", user: newUser });
   } catch (e) {

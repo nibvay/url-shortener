@@ -17,7 +17,7 @@ function validUrl(url) {
 router.post("/shorten", async (req, res, next) => {
   const { originUrl } = req.body;
   try {
-    if (!validUrl(originUrl)) throw new CustomError({ message: "invalid origin url", status: 400});
+    if (!validUrl(originUrl)) throw new CustomError({ message: "invalid origin url", status: 400 });
     const url = await Url.findOne({ originUrl });
     if (url) {
       res.status(200).json({ urlId: url.shortUrl });

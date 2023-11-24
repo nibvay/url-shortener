@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import passport from "passport";
 import dbConnection from "./config/dbConnection.js";
+import pinoLogSetting from "./config/pinoLogSetting.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import authenticate from "./middlewares/authenticate.js";
 import url from "./routes/url.js";
@@ -16,6 +17,7 @@ dbConnection();
 
 app.use(express.json());
 
+app.use(pinoLogSetting());
 app.use(passport.initialize());
 
 app.use("/auth", auth);
