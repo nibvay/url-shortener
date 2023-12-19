@@ -12,25 +12,25 @@ import "./config/passport.js";
 
 const { PORT } = process.env;
 
-function initExpress () {
+function initExpress() {
   const app = express();
-  
+
   app.use(express.json());
-  
+
   app.use(pinoLogSetting());
   app.use(passport.initialize());
-  
+
   app.use("/auth", auth);
   app.use("/url", authenticate, url);
-  
+
   app.use(errorHandler);
-  
+
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
 }
 
-async function initApp () {
+async function initApp() {
   await initDbConnection();
   initExpress();
 }

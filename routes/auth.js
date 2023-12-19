@@ -10,46 +10,81 @@ const { JWT_SECRET } = process.env;
 
 // POST /auth/register
 // payload: { name, email, password }
-router.post("/register", catchErrors(async (req, res) => {
-  const { name, email, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const toAddUser = {
-    name,
-    password: hashedPassword,
-    email,
-    creationDate: Date.now(),
-  };
-  const existedUser = await User.find({ email });
-  if (existedUser.length > 0) throw new CustomError({ message: "This email has already been registered.", status: 400 });
-  const newUser = await User.create(toAddUser);
-  res.status(200).json({ message: "User registered successfully", user: newUser });
-}));
+router.post(
+  "/register",
+  catchErrors(async (req, res) => {
+    const { name, email, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const toAddUser = {
+      name,
+      password: hashedPassword,
+      email,
+      creationDate: Date.now(),
+    };
+    const existedUser = await User.find({ email });
+    if (existedUser.length > 0)
+      throw new CustomError({
+        message: "This email has already been registered.",
+        status: 400,
+      });
+    const newUser = await User.create(toAddUser);
+    res
+      .status(200)
+      .json({ message: "User registered successfully", user: newUser });
+  })
+);
 
 // POST /auth/login
 // payload: { email, password }
-router.post("/login", catchErrors(async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne(({ email }));
-  if (!user) throw new CustomError({ message: "[Unauthorized] Invalid email or password", status: 400 });
+router.post(
+  "/login",
+  catchErrors(async (req, res) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user)
+      throw new CustomError({
+        message: "[Unauthorized] Invalid email or password",
+        status: 400,
+      });
 
-  const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword) throw new CustomError({ message: "[Unauthorized] Invalid password", status: 400 });
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword)
+      throw new CustomError({
+        message: "[Unauthorized] Invalid password",
+        status: 400,
+      });
 
-  const accessToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1h" } );
-  const refreshToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: "72h" } );
-  res.status(200).json({ message: "Login successful", accessToken, refreshToken });
-}));
+    const accessToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1h" });
+    const refreshToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: "72h" });
+    res
+      .status(200)
+      .json({ message: "Login successful", accessToken, refreshToken });
+  })
+);
 
 // POST /auth/renew
 // payload: { refreshToken }
-router.post("/renew", catchErrors(async (req, res) => {
-  const { refreshToken } = req.body;
-  const decodedRefreshToken = jwt.verify(refreshToken, JWT_SECRET);
-  const user = await User.findOne(({ email: decodedRefreshToken.email }));
-  if (!user) throw new CustomError({ message: "[Unauthorized] Invalid refresh token", status: 400 });
-  
-  const accessToken = jwt.sign({ email: decodedRefreshToken.email }, JWT_SECRET, { expiresIn: "1h" } );
-  res.status(200).json({ message: "Renew access token successfully", accessToken });
-}));
+router.post(
+  "/renew",
+  catchErrors(async (req, res) => {
+    const { refreshToken } = req.body;
+    const decodedRefreshToken = jwt.verify(refreshToken, JWT_SECRET);
+    const user = await User.findOne({ email: decodedRefreshToken.email });
+    if (!user)
+      throw new CustomError({
+        message: "[Unauthorized] Invalid refresh token",
+        status: 400,
+      });
+
+    const accessToken = jwt.sign(
+      { email: decodedRefreshToken.email },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    res
+      .status(200)
+      .json({ message: "Renew access token successfully", accessToken });
+  })
+);
 
 export default router;

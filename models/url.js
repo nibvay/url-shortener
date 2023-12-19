@@ -21,7 +21,7 @@ const UrlSchema = new mongoose.Schema({
     type: String,
     required: true,
     default: Date.now,
-  }
+  },
 });
 
 export default mongoose.model("Urls", UrlSchema);

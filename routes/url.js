@@ -17,7 +17,8 @@ function validUrl(url) {
 router.post("/shorten", async (req, res, next) => {
   const { originUrl } = req.body;
   try {
-    if (!validUrl(originUrl)) throw new CustomError({ message: "invalid origin url", status: 400 });
+    if (!validUrl(originUrl))
+      throw new CustomError({ message: "invalid origin url", status: 400 });
     const url = await Url.findOne({ originUrl });
     if (url) {
       res.status(200).json({ urlId: url.shortUrl });
@@ -43,15 +44,16 @@ router.get("/:urlId", async (req, res, next) => {
   try {
     const url = await Url.findOne({ urlId });
     if (!url) throw new CustomError({ message: "url not found", status: 400 });
-    const updatedUrl = await Url.findOneAndUpdate({ urlId },
+    const updatedUrl = await Url.findOneAndUpdate(
+      { urlId },
       { clickCount: url.clickCount + 1 },
-      { 
-        runValidators: true, 
+      {
+        runValidators: true,
         new: true,
       }
     );
     res.status(200).json({ result: updatedUrl });
-  } catch(e) {
+  } catch (e) {
     next(e);
   }
 });
