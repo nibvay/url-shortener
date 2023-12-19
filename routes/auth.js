@@ -1,12 +1,14 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+
+import mailTransporter from "../config/nodemailer.js";
 import User from "../models/user.js";
 import CustomError from "../utils/CustomError.js";
 import catchErrors from "../utils/catchError.js";
 
 const router = express.Router();
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET, TEST_RECEIVER_MAIL } = process.env;
 
 // POST /auth/register
 // payload: { name, email, password }
@@ -21,13 +23,36 @@ router.post(
       email,
       creationDate: Date.now(),
     };
+
     const existedUser = await User.find({ email });
-    if (existedUser.length > 0)
+    if (existedUser.length > 0) {
       throw new CustomError({
         message: "This email has already been registered.",
         status: 400,
       });
+    }
+
     const newUser = await User.create(toAddUser);
+    if (newUser) {
+      await mailTransporter.verify();
+
+      const mailOptions = {
+        from: process.env.GMAIL_USER,
+        to: TEST_RECEIVER_MAIL,
+        subject: "Welcome to register URL-SHORTENER service",
+        text: `Hello ${name}! Enjoy it.`,
+      };
+
+      mailTransporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          res.status.send("Error sending email");
+        } else {
+          console.log(info);
+          res.send("email sent!");
+        }
+      });
+    }
+
     res
       .status(200)
       .json({ message: "User registered successfully", user: newUser });
