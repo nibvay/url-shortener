@@ -12,8 +12,6 @@ function validUrl(url) {
   return false;
 }
 
-// POST /url/short
-// payload: { originUrl }
 router.post("/shorten", async (req, res, next) => {
   const { originUrl } = req.body;
   try {
@@ -37,23 +35,69 @@ router.post("/shorten", async (req, res, next) => {
   }
 });
 
-// GET /url/xxxxx
 router.get("/:urlId", async (req, res, next) => {
   const { urlId } = req.params;
   try {
     const url = await Url.findOne({ urlId });
     if (!url) throw new CustomError({ message: "url not found", status: 400 });
-    const updatedUrl = await Url.findOneAndUpdate({ urlId },
+    const updatedUrl = await Url.findOneAndUpdate(
+      { urlId },
       { clickCount: url.clickCount + 1 },
-      { 
-        runValidators: true, 
+      {
+        runValidators: true,
         new: true,
       }
     );
-    res.status(200).json({ result: updatedUrl });
-  } catch(e) {
+    res.status(200).json({ originUrl: updatedUrl.originUrl, clickCount: updatedUrl.clickCount });
+  } catch (e) {
     next(e);
   }
 });
 
 export default router;
+
+/**
+ * @swagger
+ * /url/shorten:
+ *   post:
+ *     summary: Create shorten url
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               originUrl:
+ *                 type: string
+ *     responses:
+ *       "200":
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 url:
+ *                   type: string
+ *
+ * /url/{urlId}:
+ *   get:
+ *     summary: Get origin url
+ *     parameters:
+ *     - in: path
+ *       name: urlId
+ *       schema:
+ *         type: string
+ *       required: true
+ *     responses:
+ *       "200":
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 originUrl:
+ *                   type: string
+ *                 clickCount:
+ *                   type: number
+ */
