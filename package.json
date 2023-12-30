@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node nodemon.js"
+    "dev": "node nodemon.js",
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
