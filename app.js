@@ -20,6 +20,9 @@ app.use(express.json());
 app.use(pinoLogSetting());
 app.use(passport.initialize());
 
+app.use("/health", (req, res) => {
+  res.status(200).send({ message: "ok", data: new Date() });
+});
 app.use("/auth", auth);
 app.use("/url", authenticate, url);
 
