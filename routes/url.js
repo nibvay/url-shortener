@@ -64,7 +64,8 @@ router.get("/:urlId", async (req, res, next) => {
         new: true,
       }
     );
-    res.status(200).json({ originUrl: updatedUrl.originUrl, clickCount: updatedUrl.clickCount });
+    // res.status(200).json({ originUrl: updatedUrl.originUrl, clickCount: updatedUrl.clickCount });
+    return res.redirect(updatedUrl.originUrl);
   } catch (e) {
     next(e);
   }
