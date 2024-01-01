@@ -18,8 +18,10 @@ router.post("/register", async (req, res, next) => {
       creationDate: Date.now(),
     };
     const existedUser = await User.find({ email });
-    if (existedUser.length > 0)
+    if (existedUser.length > 0) {
       throw new CustomError({ message: "This email has already been registered.", status: 400 });
+    }
+
     const newUser = await User.create(toAddUser);
     res.status(200).json({ message: "User registered successfully", user: newUser });
   } catch (e) {
@@ -36,7 +38,7 @@ router.post("/login", async (req, res, next) => {
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) throw new CustomError({ message: "[Unauthorized] Invalid password", status: 400 });
 
-    const accessToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1h" });
+    const accessToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: "24h" });
     const refreshToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: "72h" });
     res.status(200).json({ message: "Login successful", accessToken, refreshToken });
   } catch (e) {
