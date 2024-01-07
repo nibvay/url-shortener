@@ -33,7 +33,7 @@ const swaggerSpec = swaggerJsDoc(options);
 const app = express();
 dbConnection();
 
-app.use(cors({ origin: [`http://localhost:${CLIENT_PORT}`] }));
+app.use(cors({ origin: [`http://localhost:${CLIENT_PORT}`, "https://url-shortener-client-ten.vercel.app"] }));
 app.use(express.json());
 
 app.use(passport.initialize());
