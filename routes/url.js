@@ -4,8 +4,10 @@ import Url from "../models/url.js";
 import CustomError from "../utils/CustomError.js";
 
 const router = express.Router();
+const { PROCESS_MODE, PORT } = process.env;
 
-const BASE_URL = "http://nibvay-url-shorten-project/";
+const BASE_URL =
+  PROCESS_MODE === "production" ? "https://url-shortener-six-gilt.vercel.app/url/" : `http://localhost:${PORT}/url/`;
 
 function isValidUrl(url) {
   try {
@@ -44,28 +46,8 @@ router.post("/shorten", async (req, res, next) => {
         date: Date.now(),
       });
       console.log("newUrl", newUrl);
-      res.status(200).json({ url: newUrl });
+      res.status(200).json({ urlId: newUrl.shortUrl });
     }
-  } catch (e) {
-    next(e);
-  }
-});
-
-router.get("/:urlId", async (req, res, next) => {
-  const { urlId } = req.params;
-  try {
-    const url = await Url.findOne({ urlId });
-    if (!url) throw new CustomError({ message: "url not found", status: 400 });
-    const updatedUrl = await Url.findOneAndUpdate(
-      { urlId },
-      { clickCount: url.clickCount + 1 },
-      {
-        runValidators: true,
-        new: true,
-      }
-    );
-    // res.status(200).json({ originUrl: updatedUrl.originUrl, clickCount: updatedUrl.clickCount });
-    return res.redirect(updatedUrl.originUrl);
   } catch (e) {
     next(e);
   }
@@ -97,24 +79,4 @@ export default router;
  *                 url:
  *                   type: string
  *
- * /url/{urlId}:
- *   get:
- *     summary: Get origin url
- *     parameters:
- *     - in: path
- *       name: urlId
- *       schema:
- *         type: string
- *       required: true
- *     responses:
- *       "200":
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 originUrl:
- *                   type: string
- *                 clickCount:
- *                   type: number
  */

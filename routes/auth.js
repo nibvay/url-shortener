@@ -38,8 +38,8 @@ router.post("/login", async (req, res, next) => {
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) throw new CustomError({ message: "[Unauthorized] Invalid password", status: 400 });
 
-    const accessToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: "24h" });
-    const refreshToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: "72h" });
+    const accessToken = jwt.sign({ name: user.name, email }, JWT_SECRET, { expiresIn: "24h" });
+    const refreshToken = jwt.sign({ name: user.name, email }, JWT_SECRET, { expiresIn: "72h" });
     res.status(200).json({ message: "Login successful", accessToken, refreshToken });
   } catch (e) {
     next(e);
@@ -53,7 +53,9 @@ router.post("/renew", async (req, res, next) => {
     const user = await User.findOne({ email: decodedRefreshToken.email });
     if (!user) throw new CustomError({ message: "[Unauthorized] Invalid refresh token", status: 400 });
 
-    const accessToken = jwt.sign({ email: decodedRefreshToken.email }, JWT_SECRET, { expiresIn: "1h" });
+    const accessToken = jwt.sign({ name: decodedRefreshToken.name, email: decodedRefreshToken.email }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
     res.status(200).json({ message: "Renew access token successfully", accessToken });
   } catch (e) {
     next(e);

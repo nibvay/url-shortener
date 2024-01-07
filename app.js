@@ -9,6 +9,7 @@ import dbConnection from "./config/dbConnection.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import authenticate from "./middlewares/authenticate.js";
 import url from "./routes/url.js";
+import redirectUrl from "./routes/redirectUrl.js";
 import auth from "./routes/auth.js";
 
 import "./config/passport.js";
@@ -43,6 +44,7 @@ app.use("/health", (req, res) => {
 app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/auth", auth);
 app.use("/api/url", authenticate, url);
+app.use("/url", redirectUrl);
 
 app.use(errorHandler);
 
