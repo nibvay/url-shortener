@@ -1,9 +1,10 @@
+import { type NextFunction, Request, Response } from "express";
 import signale from "signale";
-import CustomError from "../utils/CustomError.js";
+import CustomError from "../utils/CustomError";
 
 const { PROCESS_MODE } = process.env;
 
-function errorHandler(error, req, res, next) {
+function errorHandler(error: Error, req: Request, res: Response, next: NextFunction) {
   if (PROCESS_MODE === "dev") {
     signale.fatal(error);
   }

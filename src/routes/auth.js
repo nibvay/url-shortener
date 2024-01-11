@@ -1,8 +1,8 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User from "../models/user.js";
-import CustomError from "../utils/CustomError.js";
+import User from "../models/user";
+import CustomError from "../utils/CustomError";
 
 const router = express.Router();
 const { JWT_SECRET } = process.env;

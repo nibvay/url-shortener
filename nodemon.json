@@ -1,0 +1,5 @@
+{
+  "ext": "ts,js,mjs,js,json",
+  "ignore": ["node_modules"],
+  "exec": "ts-node src/app.ts"
+}

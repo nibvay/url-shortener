@@ -1,7 +1,7 @@
 import express from "express";
 import { nanoid } from "nanoid";
-import Url from "../models/url.js";
-import CustomError from "../utils/CustomError.js";
+import Url from "../models/url";
+import CustomError from "../utils/CustomError";
 
 const router = express.Router();
 const { PROCESS_MODE, PORT } = process.env;

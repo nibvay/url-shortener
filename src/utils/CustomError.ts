@@ -1,5 +1,12 @@
+type CustomErrorProps = {
+  message: string; 
+  status?: number;
+}
+
 class CustomError extends Error {
-  constructor({ message, status = 500 }) {
+  status: number;
+
+  constructor({ message, status = 500 }: CustomErrorProps) {
     super(message);
     this.status = status;
     this.name = this.constructor.name;
