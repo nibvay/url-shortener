@@ -1,8 +1,8 @@
-import express from "express";
+import { Router } from "express";
 import Url from "../models/url";
 import CustomError from "../utils/CustomError";
 
-const router = express.Router();
+const router = Router();
 
 router.get("/:urlId", async (req, res, next) => {
   const { urlId } = req.params;
@@ -17,7 +17,7 @@ router.get("/:urlId", async (req, res, next) => {
         new: true,
       }
     );
-    // res.status(200).json({ originUrl: updatedUrl.originUrl, clickCount: updatedUrl.clickCount });
+    if (!updatedUrl) throw new CustomError({ message: "invalid redirect", status: 500 });
     return res.redirect(updatedUrl.originUrl);
   } catch (e) {
     next(e);

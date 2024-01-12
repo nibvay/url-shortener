@@ -1,10 +1,11 @@
+import { type NextFunction, Request, Response } from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import CustomError from "../utils/CustomError";
 
-function authenticate(req, res, next) {
+function authenticate(req: Request, res: Response, next: NextFunction) {
   try {
-    passport.authenticate("jwt", (error, user, info) => {
+    passport.authenticate("jwt", (error: Error, user, info) => {
       // console.error("[authenticate]", error);
       // console.error("[authenticate] info", info);
       if (error) return next(error);

@@ -1,10 +1,10 @@
-import express from "express";
+import { Router } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/user";
 import CustomError from "../utils/CustomError";
 
-const router = express.Router();
+const router = Router();
 const { JWT_SECRET } = process.env;
 
 router.post("/register", async (req, res, next) => {

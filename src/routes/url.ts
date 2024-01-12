@@ -1,15 +1,15 @@
-import express from "express";
+import { Router } from "express";
 import { nanoid } from "nanoid";
 import Url from "../models/url";
 import CustomError from "../utils/CustomError";
 
-const router = express.Router();
+const router = Router();
 const { PROCESS_MODE, PORT } = process.env;
 
 const BASE_URL =
   PROCESS_MODE === "production" ? "https://url-shortener-six-gilt.vercel.app/url/" : `http://localhost:${PORT}/url/`;
 
-function isValidUrl(url) {
+function isValidUrl(url: string) {
   try {
     return Boolean(new URL(url));
   } catch (e) {
@@ -46,7 +46,8 @@ router.post("/shorten", async (req, res, next) => {
         date: Date.now(),
       });
       console.log("newUrl", newUrl);
-      res.status(200).json({ urlId: newUrl.shortUrl });
+    
+      res.status(200).json({ shortUrl: newUrl.shortUrl });
     }
   } catch (e) {
     next(e);
