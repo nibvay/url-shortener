@@ -39,15 +39,14 @@ router.post("/shorten", async (req, res, next) => {
       res.status(200).json({ urlId: url.shortUrl });
     } else {
       const urlId = nanoid();
-      const newUrl = await Url.create({
+      const { shortUrl } = await Url.create({
         originUrl,
         urlId,
         shortUrl: `${BASE_URL}${urlId}`,
         date: Date.now(),
       });
-      console.log("newUrl", newUrl);
     
-      res.status(200).json({ shortUrl: newUrl.shortUrl });
+      res.status(200).json({ shortUrl });
     }
   } catch (e) {
     next(e);
@@ -77,7 +76,7 @@ export default router;
  *             schema:
  *               type: object
  *               properties:
- *                 url:
+ *                 shortUrl:
  *                   type: string
  *
  */
