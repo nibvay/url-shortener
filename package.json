@@ -4,9 +4,8 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon",
     "build": "tsc",
-    "start": "npm run build && node dist/app.js"
+    "dev": "nodemon --watch src --exec ts-node src/server.ts"
   },
   "author": "",
   "license": "ISC",
