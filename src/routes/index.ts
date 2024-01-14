@@ -5,7 +5,7 @@ import url from "../routes/url";
 
 const router = Router();
 
-router.use("/api/auth", auth);
-router.use("/api/url", authenticate, url);
+router.use("/auth", auth);
+router.use("/url", authenticate, url);
 
 export default router;
