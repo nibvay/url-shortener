@@ -10,7 +10,7 @@ import routes from "./routes";
 import redirectUrl from "./routes/redirectUrl";
 
 import "./config/passport";
-import swaggerDoc from  "./swagger.json";
+import swaggerDoc from "./swagger.json";
 
 const { PORT, CLIENT_PORT } = process.env;
 

@@ -45,7 +45,7 @@ router.post("/shorten", async (req, res, next) => {
         shortUrl: `${BASE_URL}${urlId}`,
         date: Date.now(),
       });
-    
+
       res.status(200).json({ shortUrl });
     }
   } catch (e) {

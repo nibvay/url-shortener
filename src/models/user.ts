@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 
 const UserSchema = new Schema({
   userId: {
@@ -21,6 +21,9 @@ const UserSchema = new Schema({
     required: true,
     default: Date.now,
   },
+  urlList: [
+    { type: Types.ObjectId, ref: "Urls" },
+  ]
 });
 
 export default model("Users", UserSchema);
