@@ -10,7 +10,7 @@ import routes from "./routes";
 import redirectUrl from "./routes/redirectUrl";
 
 import "./config/passport";
-import swaggerDoc from  "./swagger.json";
+import swaggerDoc from "./swagger.json";
 
 const { PORT, CLIENT_PORT } = process.env;
 
@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(passport.initialize());
 
 app.use("/health", (req, res) => {
-  res.status(200).send({ message: "ok", data: new Date() });
+  res.status(200).json({ message: "ok", data: new Date() });
 });
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use("/api", routes);
@@ -34,3 +34,5 @@ app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+export default app;

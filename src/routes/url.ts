@@ -9,26 +9,13 @@ const { PROCESS_MODE, PORT } = process.env;
 const BASE_URL =
   PROCESS_MODE === "production" ? "https://url-shortener-six-gilt.vercel.app/url/" : `http://localhost:${PORT}/url/`;
 
-function isValidUrl(url: string) {
+export function isValidUrl(url: string) {
   try {
     return Boolean(new URL(url));
   } catch (e) {
     return false;
   }
 }
-
-// function isUrlValid(str) {
-//   const pattern = new RegExp(
-//     '^(https?:\\/\\/)?' + // protocol
-//       '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-//       '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR IP (v4) address
-//       '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-//       '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-//       '(\\#[-a-z\\d_]*)?$', // fragment locator
-//     'i'
-//   );
-//   return pattern.test(str);
-//  }
 
 router.post("/shorten", async (req, res, next) => {
   const { originUrl } = req.body;
@@ -45,7 +32,7 @@ router.post("/shorten", async (req, res, next) => {
         shortUrl: `${BASE_URL}${urlId}`,
         date: Date.now(),
       });
-    
+
       res.status(200).json({ shortUrl });
     }
   } catch (e) {
