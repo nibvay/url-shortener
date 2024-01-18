@@ -1,3 +1,19 @@
 import { type Request } from "express";
 
-export type ExtendedRequest = Request & { user?: Record<string, unknown> };
+type UrlInfo = {
+  originUrl: string,
+  urlId: string,
+  shortUrl: string,
+  clickCount?: number,
+  date: number,
+}
+
+export type UserInfo = {
+  _id: string,
+  userId: string,
+  name: string,
+  password?: string,
+  email: string,
+  urlList?: UrlInfo[],
+}
+export type ExtendedRequest = Request & { user?: UserInfo };

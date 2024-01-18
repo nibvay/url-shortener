@@ -1,8 +1,10 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+
 import User from "../models/user";
 import CustomError from "../utils/CustomError";
+import { type UserInfo } from "../extendedTypes";
 
 const router = Router();
 const { JWT_SECRET } = process.env;
@@ -32,14 +34,15 @@ router.post("/register", async (req, res, next) => {
 router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }) as UserInfo;
     if (!user) throw new CustomError({ message: "[Unauthorized] Invalid email or password", status: 400 });
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) throw new CustomError({ message: "[Unauthorized] Invalid password", status: 400 });
 
-    const accessToken = jwt.sign({ name: user.name, email }, JWT_SECRET, { expiresIn: "24h" });
-    const refreshToken = jwt.sign({ name: user.name, email }, JWT_SECRET, { expiresIn: "72h" });
+    const toSignData = getToSignData(user);
+    const accessToken = jwt.sign(toSignData, JWT_SECRET, { expiresIn: "24h" });
+    const refreshToken = jwt.sign(toSignData, JWT_SECRET, { expiresIn: "72h" });
     res.status(200).json({ message: "Login successful", accessToken, refreshToken });
   } catch (e) {
     next(e);
@@ -50,10 +53,11 @@ router.post("/renew", async (req, res, next) => {
   const { refreshToken } = req.body;
   try {
     const decodedRefreshToken = jwt.verify(refreshToken, JWT_SECRET);
-    const user = await User.findOne({ email: decodedRefreshToken.email });
+    const user = await User.findOne({ email: decodedRefreshToken.email }) as UserInfo;
     if (!user) throw new CustomError({ message: "[Unauthorized] Invalid refresh token", status: 400 });
 
-    const accessToken = jwt.sign({ name: decodedRefreshToken.name, email: decodedRefreshToken.email }, JWT_SECRET, {
+    const toSignData = getToSignData(user);
+    const accessToken = jwt.sign(toSignData, JWT_SECRET, {
       expiresIn: "1h",
     });
     res.status(200).json({ message: "Renew access token successfully", accessToken });
@@ -61,6 +65,14 @@ router.post("/renew", async (req, res, next) => {
     next(e);
   }
 });
+
+function getToSignData(user: UserInfo) {
+  return {
+    name: user.name,
+    email: user.email,
+    userId: user.userId,
+  };
+}
 
 export default router;
 

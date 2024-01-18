@@ -1,7 +1,9 @@
 import { Router } from "express";
 import { nanoid } from "nanoid";
 import Url from "../models/url";
+import User from "../models/user";
 import CustomError from "../utils/CustomError";
+import { type ExtendedRequest, UserInfo } from "../extendedTypes";
 
 const router = Router();
 const { PROCESS_MODE, PORT } = process.env;
@@ -17,37 +19,38 @@ function isValidUrl(url: string) {
   }
 }
 
-// function isUrlValid(str) {
-//   const pattern = new RegExp(
-//     '^(https?:\\/\\/)?' + // protocol
-//       '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-//       '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR IP (v4) address
-//       '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-//       '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-//       '(\\#[-a-z\\d_]*)?$', // fragment locator
-//     'i'
-//   );
-//   return pattern.test(str);
-//  }
-
-router.post("/shorten", async (req, res, next) => {
+// 1. push current new url to user urlList
+// 2. add new shorten url
+router.post("/shorten", async (req: ExtendedRequest, res, next) => {
   const { originUrl } = req.body;
+  const { user } = req;
   try {
     if (!isValidUrl(originUrl)) throw new CustomError({ message: "invalid origin url", status: 400 });
-    const url = await Url.findOne({ originUrl });
-    if (url) {
-      res.status(200).json({ urlId: url.shortUrl });
-    } else {
-      const urlId = nanoid();
-      const { shortUrl } = await Url.create({
-        originUrl,
-        urlId,
-        shortUrl: `${BASE_URL}${urlId}`,
-        date: Date.now(),
-      });
 
-      res.status(200).json({ shortUrl });
+    const existedUrl = await Url.findOne({ originUrl });
+    if (existedUrl) {
+      res.status(200).json({ urlId: existedUrl.shortUrl });
+      return;
     }
+
+    // 1. add new shorten url
+    const urlId = nanoid();
+    const newUrl = {
+      originUrl,
+      urlId,
+      shortUrl: `${BASE_URL}${urlId}`,
+      date: Date.now(),
+    };
+    const createdUrl = await Url.create(newUrl);
+
+    // 2. push new url to user urlList
+    await User.findOneAndUpdate(
+      { email: user?.email },
+      { $push: { urlList: createdUrl._id } },
+      { returnNewDocument: true }
+    );
+
+    res.status(200).json({ shortUrl: createdUrl.shortUrl });
   } catch (e) {
     next(e);
   }
