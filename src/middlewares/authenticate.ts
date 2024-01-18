@@ -2,8 +2,8 @@ import { type NextFunction, Response } from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 
-import { type ExtendedRequest } from "../extendedTypes";
-import CustomError from "../utils/CustomError";
+import { type ExtendedRequest } from "types/extendedTypes";
+import CustomError from "utils/CustomError";
 
 function authenticate(req: ExtendedRequest, res: Response, next: NextFunction) {
   try {

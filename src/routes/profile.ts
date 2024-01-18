@@ -1,7 +1,6 @@
 import { Router } from "express";
-import User from "../models/user";
-import CustomError from "../utils/CustomError";
-import { type ExtendedRequest } from "../extendedTypes";
+import User from "models/user";
+import { type ExtendedRequest } from "types/extendedTypes";
 
 const router = Router();
 

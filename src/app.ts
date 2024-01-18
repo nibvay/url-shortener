@@ -4,12 +4,12 @@ import swaggerUi from "swagger-ui-express";
 import cors from "cors";
 import "dotenv/config";
 
-import dbConnection from "./config/dbConnection";
-import errorHandler from "./middlewares/errorHandler";
-import routes from "./routes";
-import redirectUrl from "./routes/redirectUrl";
+import dbConnection from "config/dbConnection";
+import errorHandler from "middlewares/errorHandler";
+import routes from "routes";
+import redirectUrl from "routes/redirectUrl";
 
-import "./config/passport";
+import "config/passport";
 import swaggerDoc from "./swagger.json";
 
 const { PORT, CLIENT_PORT } = process.env;

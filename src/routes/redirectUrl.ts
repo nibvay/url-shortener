@@ -1,6 +1,6 @@
 import { Router } from "express";
-import Url from "../models/url";
-import CustomError from "../utils/CustomError";
+import Url from "models/url";
+import CustomError from "utils/CustomError";
 
 const router = Router();
 
