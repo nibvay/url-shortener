@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import "dotenv/config";
-import CustomError from "utils/CustomError";
+import CustomError from "../utils/CustomError";
 
 const { MONGODB_URI } = process.env;
 

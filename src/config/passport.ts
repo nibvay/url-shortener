@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as JwtStrategy } from "passport-jwt";
 import { ExtractJwt } from "passport-jwt";
-import User from "models/user";
+import User from "../models/user";
 
 const { JWT_SECRET } = process.env;
 

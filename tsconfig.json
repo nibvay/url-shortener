@@ -11,29 +11,29 @@
     "noImplicitAny": false,
     "skipLibCheck": true,
     "baseUrl": ".",
-    "paths": {
-      "*": [
-        "src/*"
-      ],
-      "config/*": [
-        "src/config/*"
-      ],
-      "middlewares/*": [
-        "src/middlewares/*"
-      ],
-      "models/*": [
-        "src/models/*"
-      ],
-      "routes/*": [
-        "src/routes/*"
-      ],
-      "types/*": [
-        "src/types/*"
-      ],
-      "utils/*": [
-        "src/utils/*"
-      ],
-    }
+    // "paths": {
+    //   "*": [
+    //     "src/*"
+    //   ],
+    //   "config/*": [
+    //     "src/config/*"
+    //   ],
+    //   "middlewares/*": [
+    //     "src/middlewares/*"
+    //   ],
+    //   "models/*": [
+    //     "src/models/*"
+    //   ],
+    //   "routes/*": [
+    //     "src/routes/*"
+    //   ],
+    //   "types/*": [
+    //     "src/types/*"
+    //   ],
+    //   "utils/*": [
+    //     "src/utils/*"
+    //   ],
+    // }
   },
   "include": [
     "src"

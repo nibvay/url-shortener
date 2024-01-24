@@ -1,6 +1,6 @@
 import { Router } from "express";
-import User from "models/user";
-import { type ExtendedRequest } from "types/extendedTypes";
+import User from "../models/user";
+import { type ExtendedRequest } from "../types/extendedTypes";
 
 const router = Router();
 

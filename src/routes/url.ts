@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { nanoid } from "nanoid";
-import Url from "models/url";
-import User from "models/user";
-import CustomError from "utils/CustomError";
-import { type ExtendedRequest } from "types/extendedTypes";
+import Url from "../models/url";
+import User from "../models/user";
+import CustomError from "../utils/CustomError";
+import { type ExtendedRequest } from "../types/extendedTypes";
 
 const router = Router();
 const { PROCESS_MODE, PORT } = process.env;

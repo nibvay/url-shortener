@@ -2,9 +2,9 @@ import { Router } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import User from "models/user";
-import CustomError from "utils/CustomError";
-import { type UserInfo } from "types/extendedTypes";
+import User from "../models/user";
+import CustomError from "../utils/CustomError";
+import { type UserInfo } from "../types/extendedTypes";
 
 const router = Router();
 const { JWT_SECRET } = process.env;
