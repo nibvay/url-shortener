@@ -29,7 +29,7 @@ router.post("/shorten", async (req: ExtendedRequest, res, next) => {
 
     const existedUrl = await Url.findOne({ originUrl });
     if (existedUrl) {
-      res.status(200).json({ urlId: existedUrl.shortUrl });
+      res.status(200).json({ shortUrl: existedUrl.shortUrl });
       return;
     }
 
