@@ -1,7 +1,4 @@
-### Todo
+### Dev Log
 
-- [ ] validUrl
-
-### Question
-
-- [ ] how to define base url
+- tsconfig.json/paths not working with ts-node in production mode
+  - https://github.com/TypeStrong/ts-node/issues/138
