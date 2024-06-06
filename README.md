@@ -1,4 +1,4 @@
-Shorten URL
+# URL Shortener
 
 ## How to use shorten url?
 
